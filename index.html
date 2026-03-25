@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+<meta charset="UTF-8">
+<title>ESMA SHOPPING</title>
+
+<style>
+body{
+margin:0;
+font-family:Arial;
+background:#f4f6f9;
+}
+
+/* LOGIN */
+#login{
+height:100vh;
+display:flex;
+justify-content:center;
+align-items:center;
+background: url("https://image2url.com/r2/default/images/1774458972898-6e8b84f3-524d-4c14-870e-488e07b3a31f.png");
+background-size:cover;
+background-position:center;
+}
+
+.login-box{
+display:flex;
+gap:30px;
+background:rgba(255,255,255,0.95);
+padding:40px;
+border-radius:10px;
+box-shadow:0 10px 25px rgba(0,0,0,0.2);
+}
+
+.login-img{
+width:180px;
+height:180px;
+object-fit:cover;
+border-radius:10px;
+}
+
+.form-box{
+display:flex;
+flex-direction:column;
+width:280px;
+}
+
+.form-box input{
+padding:10px;
+margin:10px 0;
+border-radius:5px;
+border:1px solid #ccc;
+}
+
+.form-box button{
+padding:10px;
+border:none;
+background:#00c853;
+color:white;
+font-weight:bold;
+cursor:pointer;
+}
+
+.link{
+color:blue;
+cursor:pointer;
+}
+
+#erro,#erroCadastro{
+color:red;
+font-weight:bold;
+}
+
+/* HEADER */
+header{
+display:flex;
+align-items:center;
+gap:10px;
+background:#00c853;
+padding:15px;
+font-size:22px;
+font-weight:bold;
+color:white;
+}
+
+.logo{
+width:40px;
+}
+
+/* MENU */
+.menu{
+background:white;
+padding:15px;
+box-shadow:0 3px 10px rgba(0,0,0,0.1);
+}
+
+.menu button{
+margin-right:10px;
+padding:8px 12px;
+cursor:pointer;
+}
+
+/* CONTAINER */
+.container{
+padding:30px;
+}
+
+/* PRODUTOS */
+.produtos{
+display:grid;
+grid-template-columns:repeat(4,1fr);
+gap:20px;
+}
+
+.produto{
+background:white;
+border-radius:10px;
+padding:15px;
+box-shadow:0 5px 15px rgba(0,0,0,0.1);
+text-align:center;
+transition:0.3s;
+}
+
+.produto:hover{
+transform:scale(1.05);
+}
+
+.produto img{
+width:100%;
+height:180px;
+object-fit:cover;
+}
+
+.preco{
+color:green;
+font-weight:bold;
+}
+
+.remover{
+background:red;
+color:white;
+border:none;
+padding:5px 10px;
+cursor:pointer;
+}
+</style>
+</head>
+
+<body>
+
+<!-- LOGIN -->
+<div id="login">
+<div class="login-box">
+<img class="login-img" src="https://image2url.com/r2/default/images/1774458972898-6e8b84f3-524d-4c14-870e-488e07b3a31f.png">
+
+<div class="form-box" id="loginBox">
+<h2>Entrar</h2>
+<input id="email" placeholder="Email">
+<input id="senha" type="password" placeholder="Senha">
+<button onclick="login()">Entrar</button>
+<p class="link" onclick="mostrarCadastro()">Criar conta</p>
+<p id="erro"></p>
+</div>
+
+<div class="form-box" id="cadastroBox" style="display:none">
+<h2>Criar conta</h2>
+<input id="novoNome" placeholder="Nome">
+<input id="novoEmail" placeholder="Email">
+<input id="novoSenha" type="password" placeholder="Senha">
+<button onclick="criarConta()">Criar</button>
+<p class="link" onclick="mostrarLogin()">Voltar</p>
+<p id="erroCadastro"></p>
+</div>
+
+</div>
+</div>
+
+<!-- SITE -->
+<div id="site" style="display:none">
+
+<header>
+<img class="logo" src="https://image2url.com/r2/default/images/1774458972898-6e8b84f3-524d-4c14-870e-488e07b3a31f.png">
+ESMA SHOPPING
+</header>
+
+<div class="menu">
+<button onclick="mostrar('inicio')">🏠 Inicio</button>
+<button onclick="categoria('calcas')">👖 Calças</button>
+<button onclick="categoria('sapatos')">👟 Sapatos</button>
+<button onclick="categoria('tshirts')">👕 T-Shirts</button>
+<button onclick="categoria('camisas')">👔 Camisas</button>
+<button onclick="mostrar('carrinho')">🛒 Carrinho</button>
+<button id="btnAdmin" onclick="mostrar('admin')" style="display:none">⚙️ Admin</button>
+<button onclick="sair()" style="background:red;color:white">🚪 Sair</button>
+</div>
+
+<div class="container">
+
+<div id="inicio">
+<h2>Produtos</h2>
+<div class="produtos" id="listaProdutos"></div>
+</div>
+
+<div id="carrinho" style="display:none">
+<h2>Carrinho</h2>
+<ul id="listaCarrinho"></ul>
+<p id="totalCarrinho" style="font-weight:bold; margin-top:10px;"></p>
+<button onclick="continuarCompra()" style="padding:10px; background:#00c853; color:white; border:none; cursor:pointer;">Continuar</button>
+</div>
+
+<div id="admin" style="display:none">
+<h2>Administrador</h2>
+
+<input id="nome" placeholder="Nome produto">
+<input id="preco" placeholder="Preço">
+<input id="img" placeholder="Imagem URL">
+
+<select id="categoriaProduto">
+<option value="calcas">Calças</option>
+<option value="sapatos">Sapatos</option>
+<option value="tshirts">T-Shirts</option>
+<option value="camisas">Camisas</option>
+</select>
+
+<button onclick="addProduto()">Adicionar produto</button>
+
+<h3>Histórico</h3>
+<ul id="listaHistorico"></ul>
+</div>
+
+</div>
+</div>
+
+<script>
+
+/* KEYS */
+const LOGIN_KEY = "login_time";
+const PRODUTOS_KEY = "produtos_data";
+const CARRINHO_KEY = "carrinho_data";
+const USERS_KEY = "usuarios_data";
+const USER_LOGADO_KEY = "usuario_logado";
+const LOGIN_DURATION = 24 * 60 * 60 * 1000;
+
+/* DADOS */
+let usuarios = []
+let produtos = []
+let carrinho = []
+
+let adminEmail="gameresmael64@gmail.com"
+let adminSenha="Vadinho92"
+let isAdmin=false
+
+/* LOAD USERS */
+let usersData = localStorage.getItem(USERS_KEY)
+if(usersData){
+usuarios = JSON.parse(usersData)
+}
+
+/* LOAD PRODUTOS */
+let dados = localStorage.getItem(PRODUTOS_KEY)
+if(dados){
+produtos = JSON.parse(dados)
+}
+
+/* LOAD CARRINHO */
+let carrinhoData = localStorage.getItem(CARRINHO_KEY)
+if(carrinhoData){
+carrinho = JSON.parse(carrinhoData)
+}
+
+/* SAVE */
+function salvarProdutos(){
+localStorage.setItem(PRODUTOS_KEY, JSON.stringify(produtos))
+}
+
+function salvarCarrinho(){
+localStorage.setItem(CARRINHO_KEY, JSON.stringify(carrinho))
+}
+
+/* LOGIN */
+function login(){
+let email = document.getElementById("email").value
+let senha = document.getElementById("senha").value
+
+if(email === adminEmail && senha === adminSenha){
+isAdmin=true
+localStorage.setItem(LOGIN_KEY, Date.now())
+localStorage.setItem(USER_LOGADO_KEY, JSON.stringify({email:"admin"}))
+abrirSite()
+return
+}
+
+let user = usuarios.find(u=>u.email===email && u.senha===senha)
+
+if(user){
+localStorage.setItem(LOGIN_KEY, Date.now())
+localStorage.setItem(USER_LOGADO_KEY, JSON.stringify(user))
+abrirSite()
+}else{
+document.getElementById("erro").innerText="Login inválido"
+}
+}
+
+/* CADASTRO */
+function criarConta(){
+let nome=novoNome.value
+let email=novoEmail.value
+let senha=novoSenha.value
+
+if(!nome || !email || !senha){
+erroCadastro.innerText="Preencha tudo"
+return
+}
+
+let existe = usuarios.find(u=>u.email === email)
+if(existe){
+erroCadastro.innerText="Email já cadastrado"
+return
+}
+
+usuarios.push({nome,email,senha})
+localStorage.setItem(USERS_KEY, JSON.stringify(usuarios))
+
+alert("Conta criada com sucesso")
+mostrarLogin()
+}
+
+/* TELAS */
+function mostrarCadastro(){
+loginBox.style.display="none"
+cadastroBox.style.display="block"
+}
+
+function mostrarLogin(){
+cadastroBox.style.display="none"
+loginBox.style.display="block"
+}
+
+/* ABRIR SITE */
+function abrirSite(){
+document.getElementById("login").style.display="none"
+document.getElementById("site").style.display="block"
+
+if(isAdmin){
+document.getElementById("btnAdmin").style.display="inline-block"
+}
+
+renderProdutos()
+renderHistorico()
+renderCarrinho()
+}
+
+/* AUTO LOGIN */
+window.onload = function(){
+let loginTime = localStorage.getItem(LOGIN_KEY)
+let userData = localStorage.getItem(USER_LOGADO_KEY)
+
+if(loginTime && userData){
+let agora = Date.now()
+
+if(agora - loginTime < LOGIN_DURATION){
+let user = JSON.parse(userData)
+if(user.email === "admin") isAdmin = true
+abrirSite()
+}else{
+localStorage.clear()
+}
+}
+}
+
+/* MENU */
+function mostrar(sec){
+document.querySelectorAll(".container > div").forEach(d=>d.style.display="none")
+document.getElementById(sec).style.display="block"
+}
+
+/* PRODUTOS */
+function addProduto(){
+let nome=document.getElementById("nome").value
+let preco=document.getElementById("preco").value
+let img=document.getElementById("img").value
+let cat=document.getElementById("categoriaProduto").value
+
+if(!nome || !preco || !img){
+alert("Preencha todos os campos")
+return
+}
+
+produtos.push({nome,preco,img,cat})
+salvarProdutos()
+renderProdutos()
+renderHistorico()
+}
+
+function renderProdutos(lista=produtos){
+listaProdutos.innerHTML=""
+lista.forEach(p=>{
+listaProdutos.innerHTML+=`
+<div class="produto">
+<img src="${p.img}">
+<h3>${p.nome}</h3>
+<p class="preco">${p.preco}</p>
+<button onclick="comprar('${p.nome}')">Comprar</button>
+<button onclick="adicionarCarrinho('${p.nome}')">🛒 Carrinho</button>
+</div>`
+})
+}
+
+/* HISTORICO */
+function renderHistorico(){
+listaHistorico.innerHTML=""
+produtos.forEach((p,index)=>{
+listaHistorico.innerHTML+=`
+<li>${p.nome}
+<button class="remover" onclick="removerProduto(${index})">Remover</button>
+</li>`
+})
+}
+
+function removerProduto(index){
+produtos.splice(index,1)
+salvarProdutos()
+renderProdutos()
+renderHistorico()
+}
+
+/* CATEGORIA */
+function categoria(cat){
+let filtrados=produtos.filter(p=>p.cat===cat)
+mostrar("inicio")
+renderProdutos(filtrados)
+}
+
+/* CARRINHO */
+function adicionarCarrinho(nome){
+let produto = produtos.find(p=>p.nome === nome)
+if(produto){
+carrinho.push(produto)
+salvarCarrinho()
+alert("Adicionado ao carrinho")
+renderCarrinho()
+}
+}
+
+function renderCarrinho(){
+listaCarrinho.innerHTML=""
+let total = 0
+
+carrinho.forEach((p,index)=>{
+    let precoNum = parseFloat(p.preco.replace(/[^\d.,]/g,"").replace(",","."))
+    total += precoNum
+
+    listaCarrinho.innerHTML+=`
+    <li style="display:flex; align-items:center; gap:10px; margin-bottom:10px;">
+        <img src="${p.img}" style="width:60px; height:60px; object-fit:cover; border-radius:5px;">
+        <div style="flex:1">
+            <strong>${p.nome}</strong><br>
+            Preço: ${p.preco}<br>
+            Quantidade: 1
+        </div>
+        <button onclick="removerCarrinho(${index})" style="background:red; color:white; border:none; padding:5px 10px; cursor:pointer;">❌</button>
+    </li>`
+})
+
+totalCarrinho.innerText = "Total a pagar: " + total.toLocaleString('pt-PT', {style:'currency', currency:'AOA'})
+}
+
+function removerCarrinho(index){
+carrinho.splice(index,1)
+salvarCarrinho()
+renderCarrinho()
+}
+
+/* COMPRAR */
+function comprar(nome){
+window.open(`https://wa.me/244925824646?text=Quero comprar ${nome}`)
+}
+
+function continuarCompra(){
+if(carrinho.length === 0){
+    alert("Carrinho vazio!")
+    return
+}
+
+let msg = "Quero comprar:\n"
+carrinho.forEach(p=>{
+    msg += `- ${p.nome} - ${p.preco}\n`
+})
+
+let url = `https://wa.me/244925824646?text=${encodeURIComponent(msg)}`
+window.open(url)
+}
+
+/* SAIR */
+function sair(){
+localStorage.removeItem(LOGIN_KEY)
+localStorage.removeItem(USER_LOGADO_KEY)
+location.reload()
+}
+
+</script>
+
+</body>
+</html>
